@@ -15,7 +15,7 @@ portal de ventas/compra y al recibo de punto de venta.
 Todos los cambios se aplican por herencia XML/QWeb/JS/SCSS; nunca se modifica
 el código del seed, y todo es revertible con `-u`.
     """,
-    'author': 'ERPICO, Santiago Vásquez',
+    'author': 'Habitat Digital',
     'website': 'https://github.com/Vankisito/DebrandingERPICO',
     'license': 'LGPL-3',
     'depends': [

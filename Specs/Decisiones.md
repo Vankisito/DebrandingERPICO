@@ -130,7 +130,7 @@ Estado de cada registro: `[x]` aceptada, `[ ]` propuesta, `[!]` revocada.
 
 - **Estado:** `[x]`
 - **Qué:** manifests con orden canónico de claves OCA, `license: LGPL-3`,
-  `author: 'ERPICO, Santiago Vásquez'`, `website` apuntando al repo GitHub.
+  `author: 'Habitat Digital'`, `website` apuntando al repo GitHub.
   `readme/` con fragments `DESCRIPTION`, `USAGE`, `CONFIGURE`,
   `CONTRIBUTORS`, `CHANGELOG`. Headers de copyright y licencia en todo
   archivo fuente.

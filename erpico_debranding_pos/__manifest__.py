@@ -7,7 +7,7 @@
 Reemplaza la línea "Powered by Odoo" por "Powered by ERPICO" en el recibo de
 venta de punto de venta (POS) de Odoo 19.
     """,
-    'author': 'ERPICO, Santiago Vásquez',
+    'author': 'Habitat Digital',
     'website': 'https://github.com/Vankisito/DebrandingERPICO',
     'license': 'LGPL-3',
     'depends': ['point_of_sale'],

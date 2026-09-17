@@ -1,4 +1,4 @@
-# © 2026 Santiago Vásquez
+# © 2026 Habitat Digital
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 from odoo.addons.erpico_debranding.patches.legacy_emails import (

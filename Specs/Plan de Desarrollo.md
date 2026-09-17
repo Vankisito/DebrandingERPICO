@@ -2,7 +2,7 @@
 
 **Proyecto:** Debranding ERPICO — Odoo 19 Community
 **Plataforma:** Odoo 19.0 (build 20260619), Docker Compose
-**Autor:** Santiago Vásquez (ERPICO)
+**Autor:** Habitat Digital
 **Audiencia:** Desarrolladores humanos y agentes IA
 **Estado:** Documento vivo — actualizar al cerrar cada sesión
 
@@ -111,5 +111,5 @@ SUPERFICIES
 
 ---
 
-*Elaborado por Santiago Vásquez (ERPICO). Desviaciones de esta
+*Elaborado por Habitat Digital. Desviaciones de esta
 documentación deben validarse antes de implementarse.*
