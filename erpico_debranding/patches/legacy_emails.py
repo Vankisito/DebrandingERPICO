@@ -1,3 +1,6 @@
+# © 2026 Santiago Vásquez
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
+
 import re
 
 _POWERED_RE = re.compile(r'Powered by <a[^>]*>Odoo</a>')

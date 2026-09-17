@@ -1,11 +1,23 @@
 {
     'name': 'Erpico Debranding',
     'version': '19.0.1.1.0',
-    'license': 'LGPL-3',
-    'author': 'Erpico',
-    'maintainer': 'Erpico',
     'category': 'Hidden',
     'summary': 'Remove Odoo branding from UI, emails and portal (Odoo 19)',
+    'description': """
+Elimina la marca Odoo / Odoo Enterprise de una base Community 19: login,
+settings, portal, emails salientes, menú de usuario y bloqueo de rutas de
+gestión de base de datos.
+
+Módulo base de la suite de debranding ERPICO. Los módulos
+`erpico_debranding_sale` y `erpico_debranding_pos` extienden su alcance al
+portal de ventas/compra y al recibo de punto de venta.
+
+Todos los cambios se aplican por herencia XML/QWeb/JS/SCSS; nunca se modifica
+el código del seed, y todo es revertible con `-u`.
+    """,
+    'author': 'ERPICO, Santiago Vásquez',
+    'website': 'https://github.com/Vankisito/DebrandingERPICO',
+    'license': 'LGPL-3',
     'depends': [
         'web',
         'base_setup',
@@ -30,6 +42,7 @@
             'erpico_debranding/static/src/scss/debranding.scss',
         ],
     },
+    'demo': [],
     'installable': True,
     'application': False,
     'post_init_hook': 'post_init_hook',
