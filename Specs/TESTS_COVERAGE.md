@@ -19,8 +19,8 @@ odoo -d debrand_test -u erpico_debranding \
 |---|---|---|---|---|
 | `TestLegacyEmails` | `test_legacy_bodies_rebranded` | S10 | 4 xmlids: `ERPICO` in body; `odoo.com`/`Odoo Tour` out | ✅ |
 | `TestLegacyEmails` | `test_bot_partner_renamed` | D-05 | sin partner `OdooBot` (incl. inactivos) | ✅ |
-| `TestEnterpriseHidden` | `test_module_to_buy_hidden_from_search_fetch` | S3 | `search_fetch`/`search_count` filtran; contexto escape muestra | ✅ |
-| `TestEnterpriseHidden` | `test_payment_provider_module_to_buy_hidden` | S4 | provider `module_to_buy=True` oculto; contexto escape | ✅ |
+| `TestEnterpriseHidden` | `test_module_to_buy_hidden_from_search_fetch` | S3 | `search`/`search_fetch`/`search_count` filtran; escape `debranding_show_enterprise` | ✅ |
+| `TestEnterpriseHidden` | `test_payment_provider_module_to_buy_hidden` | S4 | provider `module_to_buy=True` oculto en `search`/`search_fetch`; contexto escape | ✅ |
 | `TestSettingsView` | `test_get_views_strips_upgrade_boolean` | S5 | arch sin `upgrade_boolean`, campo conservado | ✅ |
 | `TestMenus` | `test_store_menus_reparented` | S7 | 3 menús padre = `menu_ir_property` | ✅ |
 | `TestBrandedRenders` | `test_brand_promotion_message` | S8 | ERPICO in, Odoo/odoo.com out | ✅ |
@@ -28,6 +28,9 @@ odoo -d debrand_test -u erpico_debranding \
 | `TestDebrandingHttp` | `test_database_manager_blocked` | S11 | 403 | ✅ |
 | `TestDebrandingHttp` | `test_database_selector_blocked` | S11 | 403 | ✅ |
 | `TestDebrandingHttp` | `test_login_debranded` | S1/S2/S8 | 200; ERPICO footer; sin manager link; favicon isotipo | ✅ |
+
+> Desde `58367ba` (BUG-006): la cobertura de S3/S4 incluye `.search()` plano,
+> no solo `search_fetch`/`search_count`.
 
 ## 2. QA manual / HTTP (sesión final reportada)
 

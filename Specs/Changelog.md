@@ -60,6 +60,23 @@ relevantes. Documento vivo.
   `readme/` fragments, suite de tests `tests/test_debranding.py`.
 - Documentada la suite completa en `Specs/`.
 
+## 2026-09-17 — Sesión 4: fixes de módulo + autor
+
+- Autor de los 3 módulos cambiado a **Habitat Digital** (manifests, headers
+  ©, readme `CONTRIBUTORS`, `Specs/`) — commit `ba167eb`.
+- Auditoría del código encontró 2 desviaciones + 1 bug fatal introducido al
+  corregirlas (documentados en `Bugs.md`):
+  - **BUG-005:** `get_views` eliminaba el `<field>` completo con widget
+    `upgrade_boolean` (contra D-07) → fix: `node.attrib.pop('widget')`.
+  - **BUG-006:** filtro Enterprise no cubría `.search()` plano →
+    override de `search()` en `base.py` + tests de `search()`/escape.
+  - **BUG-007:** `search(count=...)` no existe en ORM 19 → `TypeError` en
+    registry; firma sin `count`.
+- Suite completa re-validada: `-u` de los 3 módulos con
+  `--test-enable --test-tags=/erpico_debranding` → **0 failed, 0 errors,
+  11 tests, 66 módulos** — commit `58367ba`.
+- `Specs/Bugs.md` y `Specs/TESTS_COVERAGE.md` actualizados.
+
 ---
 
 *Próxima sesión 2026-09-18 o posterior: pendientes de `Specs/Bugs.md` y

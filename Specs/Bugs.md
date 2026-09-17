@@ -73,15 +73,28 @@ contraviniendo lo documentado (D-07: solo quitar el atributo).
 
 **Fix:** `node.attrib.pop('widget', None)`.
 
+**Resuelto en:** commit `58367ba`. Validación: suite `--test-enable` 11/11
+verde + HTTP Ajustes sin cambio funcional.
+
+---
+
 ## BUG-006 — Filtro Enterprise no cubría `search()` plano
 
 **Síntoma:** el debranding de `to_buy`/`module_to_buy` aplicaba vía
 `search_fetch`/`search_count` pero no en `.search()` plano (wizards,
 API server-side).
 
-**Fix:** override de `search()` en `base.py` con el mismo dominio (escape por
-contexto `debranding_show_enterprise`); tests extendidos en
-`TestEnterpriseHidden`.
+**Causa:** el override original solo interceptaba `search_fetch` y
+`search_count`; `search()` pasaba el dominio sin filtrar.
+
+**Fix:** override de `search()` en `base.py` (modelos `ir.module.module` y
+`payment.provider`) con el mismo dominio y escape por contexto
+`debranding_show_enterprise`; tests extendidos en `TestEnterpriseHidden`
+(`search()` plano + escape en ambos modelos).
+
+**Resuelto en:** commit `58367ba`. Validación: `TestEnterpriseHidden` → PASS.
+
+---
 
 ## BUG-007 — `search(count=...)` inexistente en ORM 19
 
@@ -89,9 +102,15 @@ contexto `debranding_show_enterprise`); tests extendidos en
 argument 'count'` en el registry (init de `ir.config_parameter`).
 
 **Causa:** el parámetro `count` de `search()` fue retirado en Odoo 17+; el
-override inicial lo re-enviaba a `super().search()`.
+override inicial lo re-enviaba a `super().search()` con `count=count`.
 
-**Fix:** firma `(self, domain, offset=0, limit=None, order=None)` sin `count`.
+**Fix:** firma `(self, domain, offset=0, limit=None, order=None)` sin `count`
+(en `Base.search` y `PaymentProvider.search`).
+
+**Resuelto en:** commit `58367ba`. Validación: `-u` de los 3 módulos →
+registry carga OK, 66 módulos, 0 errores.
+
+---
 
 ## R-001 — Endpoints POST de gestión de BD expuestos
 
