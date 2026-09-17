@@ -1,0 +1,20 @@
+from lxml import etree
+
+from odoo import api, models
+
+
+class ResConfigSettings(models.TransientModel):
+    _inherit = 'res.config.settings'
+
+    @api.model
+    def get_views(self, views, options=None):
+        result = super().get_views(views, options=options)
+        for res in result.get('views', {}).values():
+            arch = res.get('arch')
+            if not arch:
+                continue
+            tree = etree.fromstring(arch)
+            for node in tree.xpath(".//field[@widget='upgrade_boolean']"):
+                node.getparent().remove(node)
+            res['arch'] = etree.tostring(tree, encoding='unicode')
+        return result

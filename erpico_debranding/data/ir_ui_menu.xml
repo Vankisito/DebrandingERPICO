@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.theme_store" model="ir.ui.menu">
+        <field name="parent_id" ref="base.menu_ir_property"/>
+    </record>
+    <record id="base.menu_theme_store" model="ir.ui.menu">
+        <field name="parent_id" ref="base.menu_ir_property"/>
+    </record>
+    <record id="base.menu_third_party" model="ir.ui.menu">
+        <field name="parent_id" ref="base.menu_ir_property"/>
+    </record>
+</odoo>

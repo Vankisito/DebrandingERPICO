@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="web_layout_title_favicon" inherit_id="web.layout">
+        <xpath expr="//title" position="attributes">
+            <attribute name="t-esc">title or 'ERPICO'</attribute>
+        </xpath>
+        <xpath expr="//link[@rel='shortcut icon']" position="attributes">
+            <attribute name="t-att-href">x_icon or '/erpico_debranding/static/src/img/erpico-isotipo.png'</attribute>
+        </xpath>
+    </template>
+
+    <template id="web_login_layout" inherit_id="web.login_layout">
+        <xpath expr="//img[contains(@t-attf-src,'company_logo')]" position="replace">
+            <img src="/erpico_debranding/static/src/img/erpico-isotipo.png" alt="ERPICO" style="max-height:120px; max-width: 100%; width:auto"/>
+        </xpath>
+        <xpath expr="//a[@href='/web/database/manager']" position="replace"/>
+        <xpath expr="//a[contains(@href,'utm_medium=auth')]" position="replace">
+            <span>Powered by <b>ERPICO</b></span>
+        </xpath>
+    </template>
+
+    <template id="web_brand_promotion_message" inherit_id="web.brand_promotion_message">
+        <xpath expr="//t[@t-out]" position="replace">
+            <span>Powered by <b>ERPICO</b></span>
+        </xpath>
+    </template>
+</odoo>

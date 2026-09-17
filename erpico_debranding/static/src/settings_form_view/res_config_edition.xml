@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <div t-name="res_config_edition">
+        <Setting addLabel="false">
+            <div class="user-heading">
+                <h3 class="px-0">ERPICO</h3>
+            </div>
+            <div>
+                <div role="tabpanel" class="text-muted o_web_settings_compact_subtitle">
+                    <small>Powered by <b>ERPICO</b></small>
+                </div>
+            </div>
+        </Setting>
+    </div>
+</templates>
