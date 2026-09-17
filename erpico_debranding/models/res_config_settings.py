@@ -18,6 +18,6 @@ class ResConfigSettings(models.TransientModel):
                 continue
             tree = etree.fromstring(arch)
             for node in tree.xpath(".//field[@widget='upgrade_boolean']"):
-                node.getparent().remove(node)
+                node.attrib.pop('widget', None)
             res['arch'] = etree.tostring(tree, encoding='unicode')
         return result

@@ -8,6 +8,15 @@ class Base(models.AbstractModel):
     _inherit = 'base'
 
     @api.model
+    def search(self, domain, offset=0, limit=None, order=None):
+        if self._name == 'ir.module.module' and not self.env.context.get(
+            'debranding_show_enterprise'
+        ):
+            domain = [*domain, ('to_buy', '=', False)]
+        return super().search(
+            domain, offset=offset, limit=limit, order=order)
+
+    @api.model
     @api.readonly
     def search_fetch(self, domain, field_names=None, offset=0, limit=None, order=None):
         if self._name == 'ir.module.module' and not self.env.context.get(
@@ -34,6 +43,13 @@ class Base(models.AbstractModel):
 
 class PaymentProvider(models.Model):
     _inherit = 'payment.provider'
+
+    @api.model
+    def search(self, domain, offset=0, limit=None, order=None):
+        if not self.env.context.get('debranding_show_enterprise'):
+            domain = [*domain, ('module_to_buy', '=', False)]
+        return super().search(
+            domain, offset=offset, limit=limit, order=order)
 
     @api.model
     @api.readonly

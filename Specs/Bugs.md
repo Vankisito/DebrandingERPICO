@@ -6,6 +6,9 @@
 | BUG-002 | Pack | Media | `Markup.replace` inconsistente |
 | BUG-003 | Pack | Alta | Escrituras del shell descartadas |
 | BUG-004 | Pack | Media | `_get_combined_arch` no refleja overrides |
+| BUG-005 | Pack | Media | `get_views` eliminaba el campo entero con widget |
+| BUG-006 | Pack | Media | Filtro Enterprise no cubría `search()` plano |
+| BUG-007 | Pack | Alta | `search(count=...)` inexistente en ORM 19 |
 | R-001 | Abierto | Alta | POST de gestión de BD sin intervenir |
 
 ---
@@ -59,6 +62,36 @@ no propaga de forma fiable los overrides.
 **Fix:** validar siempre por render real (`ir.ui.view._render`) o HTTP final.
 
 ---
+
+## BUG-005 — `get_views` eliminaba el campo entero con widget de upgrade
+
+**Síntoma:** los `<field widget="upgrade_boolean">` desaparecían de la vista
+de Ajustes por completo, en vez de perder solo el widget.
+
+**Causa:** `res_config_settings.py` usaba `node.getparent().remove(node)`
+contraviniendo lo documentado (D-07: solo quitar el atributo).
+
+**Fix:** `node.attrib.pop('widget', None)`.
+
+## BUG-006 — Filtro Enterprise no cubría `search()` plano
+
+**Síntoma:** el debranding de `to_buy`/`module_to_buy` aplicaba vía
+`search_fetch`/`search_count` pero no en `.search()` plano (wizards,
+API server-side).
+
+**Fix:** override de `search()` en `base.py` con el mismo dominio (escape por
+contexto `debranding_show_enterprise`); tests extendidos en
+`TestEnterpriseHidden`.
+
+## BUG-007 — `search(count=...)` inexistente en ORM 19
+
+**Síntoma:** `TypeError: BaseModel.search() got an unexpected keyword
+argument 'count'` en el registry (init de `ir.config_parameter`).
+
+**Causa:** el parámetro `count` de `search()` fue retirado en Odoo 17+; el
+override inicial lo re-enviaba a `super().search()`.
+
+**Fix:** firma `(self, domain, offset=0, limit=None, order=None)` sin `count`.
 
 ## R-001 — Endpoints POST de gestión de BD expuestos
 

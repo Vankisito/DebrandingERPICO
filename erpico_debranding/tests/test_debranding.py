@@ -49,6 +49,15 @@ class TestEnterpriseHidden(TransactionCase):
             self.env['ir.module.module'].search_count(
                 [('name', '=', 'test_enterprise_hidden')]
             ), 0)
+        # el filtro también aplica a search() plano (wizards/API)
+        res_plain = self.env['ir.module.module'].search(
+            [('name', '=', 'test_enterprise_hidden')]
+        )
+        self.assertNotIn(module, res_plain)
+        res_plain_all = self.env['ir.module.module'].with_context(
+            debranding_show_enterprise=True
+        ).search([('name', '=', 'test_enterprise_hidden')])
+        self.assertIn(module, res_plain_all)
 
     def test_payment_provider_module_to_buy_hidden(self):
         module = self.env['ir.module.module'].create({
@@ -71,6 +80,17 @@ class TestEnterpriseHidden(TransactionCase):
             [('code', '=', 'none'), ('name', '=', 'Test Enterprise Provider')]
         )
         self.assertIn(provider, res_all)
+        # filtro también en search() plano
+        res_plain = self.env['payment.provider'].search(
+            [('code', '=', 'none'), ('name', '=', 'Test Enterprise Provider')]
+        )
+        self.assertNotIn(provider, res_plain)
+        res_plain_all = self.env['payment.provider'].with_context(
+            debranding_show_enterprise=True
+        ).search(
+            [('code', '=', 'none'), ('name', '=', 'Test Enterprise Provider')]
+        )
+        self.assertIn(provider, res_plain_all)
 
 
 @tagged('erpico_debranding')
