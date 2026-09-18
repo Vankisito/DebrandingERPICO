@@ -1,6 +1,16 @@
 Changelog
 =========
 
+19.0.1.2.0 (2026-09-18)
+-----------------------
+* Bloquea los endpoints POST de gestión de base de datos (R-001):
+  ``create``, ``duplicate``, ``drop``, ``backup``, ``restore`` y
+  ``change_password`` devuelven 403 (controller override de ``web.Database``).
+* Blindaje del filtro Enterprise frente a domains legacy (``None``/tuple):
+  helper ``_prepare_domain`` en ``models/base.py``.
+* Suite de tests ampliada de 11 a 20 casos (incluye POST de BD, domains
+  legacy, paridad parche/migración, portal sale/purchase y assets POS).
+
 19.0.1.1.0 (2026-09-17)
 -----------------------
 * Parchea los ``mail.template`` legados de ``auth_signup`` que almacenan

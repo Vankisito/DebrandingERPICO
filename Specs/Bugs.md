@@ -29,24 +29,22 @@ obvios, añadir un bloque en *Detalle de bugs abiertos*. Al resolverlo, moverlo 
 
 | ID | Fecha | Vista / Origen | Descripción | Tipo | Prioridad | Estado |
 |----|-------|----------------|-------------|------|-----------|--------|
-| R-001 | 2026-09-17 | `/web/database/*` (POST) | `manager`/`selector` bloqueados con 403, pero los endpoints POST `create`/`drop`/`backup`/`restore`/`duplicate` siguen operativos (auth `none`, protegidos solo por la master password). | Seguridad | 🟠 Alta | Abierto |
+| *(ninguno)* | | | | | | |
 
-### Detalle de bugs abiertos
-
-**R-001 — Endpoints POST de gestión de BD expuestos**
-- *Causa:* se decidió (D-06) no tocar los POST para minimizar superficie de
-  cambio; la autenticación del admin de BD se dejó en manos del deploy.
-- *Impacto:* en un deploy sin proxy que proteja `create/drop/backup/restore`,
-  cualquiera con acceso a la red puede intentar operaciones de BD; con la
-  master password por defecto (`admin`) el riesgo es inmediato.
-- *Soluciones candidatas (a evaluar):* (a) rutas catch-all 403 en
-  `controllers/main.py` para los 5 POST (`methods=['POST']`, `csrf=False`);
-  (b) bloquear `/web/database/*` en reverse proxy; (c) `admin_passwd` fuerte
-  en el deploy + no exponer el puerto.
+> Queda fuera de scope, documentado en `TESTS_COVERAGE.md` §4: el endpoint
+> JSON-RPC `/web/database/list` (auth `none`) sigue activo por compatibilidad
+> con la app móvil; expone solo nombres de BD. Mitigación: proxy + `dbfilter`/
+> `list_db = False`.
 
 ---
 
 ## Bugs Resueltos
+
+Resuelto el **2026-09-18** (versión `19.0.1.2.0`, suite 20/20 tests):
+
+| ID | Vista / Origen | Descripción | Tipo | Prioridad | Solución | Commit |
+|----|----------------|-------------|------|-----------|----------|--------|
+| R-001 | `/web/database/*` (POST) | `manager`/`selector` bloqueados con 403, pero los endpoints POST `create`/`drop`/`backup`/`restore`/`duplicate` seguían operativos (auth `none`, protegidos solo por la master password). | Seguridad | 🟠 Alta | Controller override de `web.Database` (`controllers/main.py`): los 6 POST (`create`, `duplicate`, `drop`, `backup`, `restore`, `change_password`) → 403. Verificado por HttpCase (6 endpoints) y por HTTP real. | `19.0.1.2.0` |
 
 Resuelto el **2026-09-17** (hot-fix posterior a `19.0.1.1.0`, sin bump de
 versión; verificado con `-u` de los 3 módulos + `--test-enable

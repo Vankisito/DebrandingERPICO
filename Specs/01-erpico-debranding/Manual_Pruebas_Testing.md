@@ -12,12 +12,19 @@ Cada prueba referencia la superficie S# y el criterio de aceptación.
 
 ```bash
 docker exec -i odoo_debrand_test odoo -d debrand_test \
-  -u erpico_debranding \
-  --test-enable --test-tags=/erpico_debranding
+  -u erpico_debranding,erpico_debranding_sale,erpico_debranding_pos \
+  --test-enable --test-tags=erpico_debranding \
+  --http-port=8090 --no-http --stop-after-init
 ```
 
-- **Expectativa:** 11/11 PASS.
-- Rodríguez de errores: revisar `tests/test_debranding.py` + `log`; nunca
+- **Expectativa:** 20/20 PASS.
+- **Ojo sintaxis de tags:** usar el tag plano (`erpico_debranding`), NO
+  `/erpico_debranding`: la barra añade filtro de módulo y excluye los tests
+  de `_sale`/`_pos`.
+- **Ojo puerto:** si el server principal del container ya corre en 8069,
+  pasar SIEMPRE `--http-port=8090 --no-http` (con `--no-http` solo, el bind a
+  8069 del proceso conviviente aborta el run).
+- Rodríguez de errores: revisar `tests/` de los 3 módulos + `log`; nunca
   asumas que un cambio cosmético no rompe un assert.
 
 ## 2. HTTP (QA manual)
@@ -48,9 +55,15 @@ grep -c "odoo.com" nf.html # 0
 for r in /web/database/manager /web/database/selector; do
   curl -s -o /dev/null -w "$r %{http_code}\n" "http://localhost:8069$r"
 done
+# POST (R-001, desde 19.0.1.2.0)
+for r in create duplicate drop backup restore change_password; do
+  curl -s -o /dev/null -w "POST /web/database/$r %{http_code}\n" \
+    -X POST -d "master_pwd=x" "http://localhost:8069/web/database/$r"
+done
 ```
 
-**Aceptación:** ambos 403.
+**Aceptación:** todos 403 (GET y POST).
+**Fuera de alcance:** JSON-RPC `/web/database/list` (compat móvil).
 
 ### 2.4 Assets
 

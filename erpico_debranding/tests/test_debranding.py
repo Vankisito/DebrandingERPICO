@@ -1,6 +1,10 @@
 # © 2026 Habitat Digital
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
+import importlib.util
+from pathlib import Path
+
+from odoo.addons.erpico_debranding.patches import legacy_emails
 from odoo.addons.erpico_debranding.patches.legacy_emails import (
     LEGACY_EMAIL_XMLIDS,
 )
@@ -92,6 +96,24 @@ class TestEnterpriseHidden(TransactionCase):
         )
         self.assertIn(provider, res_plain_all)
 
+    def test_search_handles_legacy_domains(self):
+        # los domains None y tuple no deben romper el filtro ni el ORM
+        self.env['ir.module.module'].search(None)
+        self.env['ir.module.module'].search(())
+        self.env['payment.provider'].search(None)
+        self.env['payment.provider'].search(())
+        # y el filtro sigue activo con domain None
+        hidden = self.env['ir.module.module'].create({
+            'name': 'test_legacy_domain_hidden',
+            'state': 'uninstalled',
+            'to_buy': True,
+        })
+        self.assertNotIn(
+            hidden,
+            self.env['ir.module.module'].search(
+                [('name', '=', 'test_legacy_domain_hidden')]),
+        )
+
 
 @tagged('erpico_debranding')
 class TestSettingsView(TransactionCase):
@@ -156,3 +178,58 @@ class TestDebrandingHttp(HttpCase):
         self.assertIn('Powered by <b>ERPICO</b>', response.text)
         self.assertNotIn('web/database/manager', response.text)
         self.assertIn('erpico-isotipo.png', response.text)
+
+    def test_database_post_endpoints_blocked(self):
+        """Todos los POST de gestión de BD devuelven 403 (R-001 fix)."""
+        endpoints = [
+            '/web/database/create',
+            '/web/database/duplicate',
+            '/web/database/drop',
+            '/web/database/backup',
+            '/web/database/restore',
+            '/web/database/change_password',
+        ]
+        for ep in endpoints:
+            response = self.url_open(ep, data={'master_pwd': 'x'})
+            self.assertEqual(response.status_code, 403, ep)
+
+
+@tagged('erpico_debranding')
+class TestPatchMigrationParity(TransactionCase):
+    """Verifica que la migración autocontenida y el parche compartan la misma configuración."""
+
+    def _load_migration(self):
+        migration_path = (
+            Path(__file__).resolve().parents[1]
+            / 'migrations' / '19.0.1.1.0' / 'post-migrate.py'
+        )
+        spec = importlib.util.spec_from_file_location(
+            'post_migrate_parity', str(migration_path))
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod
+
+    def test_replacements_parity(self):
+        migration = self._load_migration()
+        self.assertEqual(
+            legacy_emails._REPLACEMENTS, migration._REPLACEMENTS,
+            "_REPLACEMENTS mismatch between patch and migration")
+        self.assertEqual(
+            legacy_emails.LEGACY_EMAIL_XMLIDS, migration.LEGACY_EMAIL_XMLIDS,
+            "LEGACY_EMAIL_XMLIDS mismatch between patch and migration")
+        self.assertEqual(
+            legacy_emails._POWERED_RE.pattern, migration._POWERED_RE.pattern,
+            "_POWERED_RE pattern mismatch")
+        self.assertEqual(
+            legacy_emails._TOUR_RE.pattern, migration._TOUR_RE.pattern,
+            "_TOUR_RE pattern mismatch")
+        self.assertEqual(
+            legacy_emails._MARKETING_RE.pattern, migration._MARKETING_RE.pattern,
+            "_MARKETING_RE pattern mismatch")
+
+    def test_patch_idempotent(self):
+        """Segunda ejecución del parche no modifica nada."""
+        from odoo.addons.erpico_debranding.patches.legacy_emails import (
+            patch_legacy_emails)
+        result = patch_legacy_emails(self.env)
+        self.assertEqual(result, [], "Patch was not idempotent")

@@ -92,12 +92,14 @@ parche en `post_init_hook` + migración versionada.
 INSTALACIÓN
 [x] odoo -u erpico_debranding,erpico_debranding_sale,erpico_debranding_pos → 0 errores
 [x] post_init_hook + migración 19.0.1.1.0 parchean los 4 mail.template legados
-[x] Suite tests --test-enable --test-tags /erpico_debranding → verde
+[x] Suite tests --test-enable --test-tags erpico_debranding (tag plano) → verde (20/20)
 
 SUPERFICIES
 [x] /web/login: título ERPICO, favicon isotipo, footer "Powered by ERPICO",
     sin "Manage Databases"
-[x] /web/database/manager y /web/database/selector → 403
+[x] /web/database/manager, /web/database/selector → 403
+[x] /web/database/{create,duplicate,drop,backup,restore,change_password} (POST) → 403
+    (R-001, desde 19.0.1.2.0)
 [x] Apps: módulos Enterprise ocultos (to_buy), contadores coherentes
 [x] Ajustes: sin widget upgrade_boolean, tarjeta About ERPICO
 [x] Menús theme_store/menu_theme_store/menu_third_party bajo menu_ir_property

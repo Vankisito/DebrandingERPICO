@@ -4,6 +4,19 @@
 from odoo import api, models
 
 
+def _prepare_domain(domain):
+    """Normalize a domain to a mutable list.
+
+    ``None`` and tuples are converted to a list; legacy string domains
+    are passed through untouched (the ORM still accepts them).
+    """
+    if domain is None:
+        return []
+    if isinstance(domain, (list, tuple)):
+        return list(domain)
+    return domain
+
+
 class Base(models.AbstractModel):
     _inherit = 'base'
 
@@ -12,7 +25,9 @@ class Base(models.AbstractModel):
         if self._name == 'ir.module.module' and not self.env.context.get(
             'debranding_show_enterprise'
         ):
-            domain = [*domain, ('to_buy', '=', False)]
+            domain = _prepare_domain(domain)
+            if isinstance(domain, list):
+                domain = [*domain, ('to_buy', '=', False)]
         return super().search(
             domain, offset=offset, limit=limit, order=order)
 
@@ -22,7 +37,9 @@ class Base(models.AbstractModel):
         if self._name == 'ir.module.module' and not self.env.context.get(
             'debranding_show_enterprise'
         ):
-            domain = [*domain, ('to_buy', '=', False)]
+            domain = _prepare_domain(domain)
+            if isinstance(domain, list):
+                domain = [*domain, ('to_buy', '=', False)]
         return super().search_fetch(
             domain,
             field_names=field_names,
@@ -37,7 +54,9 @@ class Base(models.AbstractModel):
         if self._name == 'ir.module.module' and not self.env.context.get(
             'debranding_show_enterprise'
         ):
-            domain = [*domain, ('to_buy', '=', False)]
+            domain = _prepare_domain(domain)
+            if isinstance(domain, list):
+                domain = [*domain, ('to_buy', '=', False)]
         return super().search_count(domain, limit=limit)
 
 
@@ -47,7 +66,9 @@ class PaymentProvider(models.Model):
     @api.model
     def search(self, domain, offset=0, limit=None, order=None):
         if not self.env.context.get('debranding_show_enterprise'):
-            domain = [*domain, ('module_to_buy', '=', False)]
+            domain = _prepare_domain(domain)
+            if isinstance(domain, list):
+                domain = [*domain, ('module_to_buy', '=', False)]
         return super().search(
             domain, offset=offset, limit=limit, order=order)
 
@@ -55,7 +76,9 @@ class PaymentProvider(models.Model):
     @api.readonly
     def search_fetch(self, domain, field_names=None, offset=0, limit=None, order=None):
         if not self.env.context.get('debranding_show_enterprise'):
-            domain = [*domain, ('module_to_buy', '=', False)]
+            domain = _prepare_domain(domain)
+            if isinstance(domain, list):
+                domain = [*domain, ('module_to_buy', '=', False)]
         return super().search_fetch(
             domain,
             field_names=field_names,

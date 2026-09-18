@@ -79,5 +79,41 @@ relevantes. Documento vivo.
 
 ---
 
-*Próxima sesión 2026-09-18 o posterior: pendientes de `Specs/Bugs.md` y
-revisión de R-001.*
+## 2026-09-18 — Sesión 5: audit + cierre R-001 + suite ampliada
+
+**Entorno:** mismo stack Docker (`odoo_debrand_test` + `db_debrand_test`).
+
+- Audit del estado: 11/11 tests verdes, tree limpio, 6 hallazgos
+  documentados (R-001 abierto, S12/S13 sin tests, drift parche/migración,
+  domain legacy, deps POS, overhead de `search()`).
+- **R-001 resuelto:** controller override de `web.Database` en
+  `controllers/main.py` — los 6 POST (`create`, `duplicate`, `drop`,
+  `backup`, `restore`, `change_password`) → 403. Verificado por HttpCase
+  (6 endpoints) y por HTTP real contra el server en vivo (8070).
+- **Blindaje de domains:** helper `_prepare_domain` en `models/base.py`
+  (None/tuple → list; str legacy se pasa intacto).
+- **Drift parche/migración:** `TestPatchMigrationParity` compara
+  `_REPLACEMENTS`, xmlids y patterns vía `importlib` (sin importar el
+  paquete durante migración — lección de BUG-001).
+- **Test de idempotencia** del parche (2ª ejecución = 0 patcheos).
+- **S12 automatizado:** `erpico_debranding_sale/tests/` — HttpCase abre los
+  portales con `access_token` real (ruta sale `/my/orders`, purchase
+  `/my/purchase`) y verifica ausencia de "Connect with your software!".
+  Fallos intermedios descubiertos y corregidos: token = `_portal_ensure_token()`
+  (Odoo 19 no auto-genera `access_token`), ruta purchase sin `/orders/`.
+- **S13 automatizado:** `erpico_debranding_pos/tests/` — override presente en
+  `_get_asset_paths('point_of_sale.assets_prod')` + contenido del XML
+  (t-inherit `OrderReceipt`). Descubierto: los assets de manifest NO viven en
+  filas `ir.asset` persistidas; se leen vía `_get_asset_paths`.
+- **Sintaxis de tags corregida en docs:** `--test-tags=erpico_debranding`
+  (tag plano). `/erpico_debranding` filtra por módulo exacto y excluye
+  `_sale`/`_pos` (la suite anterior corría 11 tests solo del núcleo).
+- Suite final: **20/20 tests, 0 failed, 0 errors** (`-u` de los 3 módulos).
+- Versiones: núcleo `19.0.1.1.0` → `19.0.1.2.0`; `_sale` y `_pos` →
+  `19.0.1.0.1` (tests). `Bugs.md`, `TESTS_COVERAGE.md`, readme CHANGELOGs y
+  checklist del Plan actualizados.
+
+---
+
+*Próxima sesión: evaluar `/web/database/list` (JSON-RPC) y hardening de
+deploy (`list_db = False`, proxy, `admin_passwd`).*

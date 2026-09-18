@@ -88,10 +88,12 @@ Estado de cada registro: `[x]` aceptada, `[ ]` propuesta, `[!]` revocada.
 
 ## D-06 — Rutas de BD: 403 en UI, POST no intervenido
 
-- **Estado:** `[x]` (+ riesgo asumido)
+- **Estado:** `[x]` — *enmendada 2026-09-18:* los POST también se bloquean
+  (R-001 resuelto en `19.0.1.2.0`); el JSON-RPC `/web/database/list` sigue
+  activo por compatibilidad móvil (ver `Bugs.md`).
 - **Qué:** `/web/database/manager` y `/web/database/selector` → `Forbidden`
   (403). Los endpoints **POST** `/web/database/{create,drop,backup,restore}`
-  quedan intactos.
+  quedan intactos (hasta 2026-09-17).
 - **Por qué:** con DB public domain público y auth de admin de BD externo,
   bloquear la UI quita la exposición superficial; intervenir los POST añade
   superficie de test y riesgo de efecto colateral en tools de

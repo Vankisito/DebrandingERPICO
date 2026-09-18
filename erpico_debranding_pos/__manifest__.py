@@ -1,6 +1,6 @@
 {
     'name': 'Erpico POS Debranding',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.0.1',
     'category': 'Hidden',
     'summary': 'Remove Odoo branding from POS receipts',
     'description': """

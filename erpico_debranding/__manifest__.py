@@ -1,6 +1,6 @@
 {
     'name': 'Erpico Debranding',
-    'version': '19.0.1.1.0',
+    'version': '19.0.1.2.0',
     'category': 'Hidden',
     'summary': 'Remove Odoo branding from UI, emails and portal (Odoo 19)',
     'description': """
