@@ -31,20 +31,9 @@ obvios, añadir un bloque en *Detalle de bugs abiertos*. Al resolverlo, moverlo 
 |----|-------|----------------|-------------|------|-----------|--------|
 | *(ninguno)* | | | | | | |
 
-> Queda fuera de scope, documentado en `TESTS_COVERAGE.md` §4: el endpoint
-> JSON-RPC `/web/database/list` (auth `none`) sigue activo por compatibilidad
-> con la app móvil; expone solo nombres de BD. Mitigación: proxy + `dbfilter`/
-> `list_db = False`.
-
 ---
 
 ## Bugs Resueltos
-
-Resuelto el **2026-09-18** (versión `19.0.1.2.0`, suite 20/20 tests):
-
-| ID | Vista / Origen | Descripción | Tipo | Prioridad | Solución | Commit |
-|----|----------------|-------------|------|-----------|----------|--------|
-| R-001 | `/web/database/*` (POST) | `manager`/`selector` bloqueados con 403, pero los endpoints POST `create`/`drop`/`backup`/`restore`/`duplicate` seguían operativos (auth `none`, protegidos solo por la master password). | Seguridad | 🟠 Alta | Controller override de `web.Database` (`controllers/main.py`): los 6 POST (`create`, `duplicate`, `drop`, `backup`, `restore`, `change_password`) → 403. Verificado por HttpCase (6 endpoints) y por HTTP real. | `19.0.1.2.0` |
 
 Resuelto el **2026-09-17** (hot-fix posterior a `19.0.1.1.0`, sin bump de
 versión; verificado con `-u` de los 3 módulos + `--test-enable
