@@ -8,24 +8,23 @@ visibles (interfaz, portal, emails, POS) y oculta los módulos de pago de Odoo.
 
 | Módulo | Versión | Alcance |
 |---|---|---|
-| `erpico_debranding` | 19.0.1.1.0 | Núcleo: login, settings, portal, emails (QWeb + mail.template legados), menú de usuario, filtro Enterprise, bloqueo de rutas de BD |
+| `erpico_debranding` | 19.0.1.3.0 | Núcleo: login, settings, portal, emails (QWeb + mail.template legados), menú de usuario, filtro Enterprise, bloqueo de rutas de BD |
 | `erpico_debranding_sale` | 19.0.1.0.0 | Portal de ventas/compra: botón "Connect with your software!" |
 | `erpico_debranding_pos` | 19.0.1.0.0 | Recibo de punto de venta: footer "Powered by ERPICO" |
+| `erpico_web_sidebar` | — | Navegación tipo Tiendanube: sidebar + topbar mínima (en diseño) |
 
 ## Documentación
 
-Toda la especificación vive en `Specs/` (estructura copiada del proyecto de
-referencia `GpoBCA_Seguros-desarrollo`):
+Cada módulo es autocontenido: su especificación vive dentro de su propia
+carpeta en `specs/` (estructura copiada del proyecto de referencia
+`GpoBCA_Seguros-desarrollo`):
 
-- `Specs/Plan de Desarrollo.md` — plan, decisiones de diseño y checklist.
-- `Specs/Decisiones.md` — decisiones técnicas con su porqué (D-01 … D-07).
-- `Specs/Changelog.md` — bitácora de sesiones.
-- `Specs/Bugs.md` — defectos y hallazgos durante QA.
-- `Specs/TESTS_COVERAGE.md` — suite automatizada y manual.
-- `Specs/01-erpico-debranding/` — arquitectura, lógica, BDD, diccionario de
+- `erpico_debranding/specs/` — plan, decisiones (D-01 … D-07), changelog,
+  bugs, cobertura de tests, arquitectura, lógica, BDD, diccionario de
   recursos, manual de pruebas y specs de parches.
-- `Specs/02-erpico-debranding-sale/`, `Specs/03-erpico-debranding-pos/` —
-  specs de los módulos compañeros.
+- `erpico_debranding_sale/specs/` — specs del portal de ventas/compra.
+- `erpico_debranding_pos/specs/` — specs del recibo de punto de venta.
+- `erpico_web_sidebar/specs/` — specs del módulo de navegación web (sidebar).
 
 ## Estándares
 
