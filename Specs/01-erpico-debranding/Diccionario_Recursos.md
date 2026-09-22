@@ -35,9 +35,12 @@ erpico_debranding/
 │   └── CHANGELOG.rst
 ├── static/src/
 │   ├── img/erpico-isotipo.png
+│   ├── img/bot_placeholder.png
 │   ├── js/user_menu.js
+│   ├── js/messaging_menu.js
+│   ├── js/out_of_focus.js
 │   ├── scss/debranding.scss
-│   └── settings_form_view/res_config_edition.xml
+│   └── settings_form_view/res_config_edition.js + res_config_edition.xml
 ├── tests/
 │   ├── __init__.py
 │   └── test_debranding.py
@@ -58,6 +61,7 @@ erpico_debranding/
 | `erpico_debranding.reset_password_rebrand` | template QWeb | reset password |
 | `erpico_debranding.res_config_edition_erpico` | template OWL (assets) | tarjeta About |
 | `erpico_debranding.user_menu_items_erpico` | JS registry entry | menú de usuario |
+| `erpico_debranding.erpico_res_config_edition` | template OWL (assets) | widget About (componente registrado en `view_widgets` a nombre `res_config_edition`) |
 
 ## 3. Templados heredados (seed) que se sobreescriben
 

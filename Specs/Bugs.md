@@ -35,6 +35,14 @@ obvios, añadir un bloque en *Detalle de bugs abiertos*. Al resolverlo, moverlo 
 
 ## Bugs Resueltos
 
+Resuelto el **2026-09-22** (versión `19.0.1.3.0`):
+
+| ID | Vista / Origen | Descripción | Tipo | Prioridad | Solución | Commit |
+|----|----------------|-------------|------|-----------|----------|--------|
+| BUG-008 | Fuga de marca — Menú de notificaciones (campana) | Al entrar a la BD, pestaña Notificaciones mostraba card "Install Odoo — Come here often? Install the app for quick and easy access!" (getter `installationRequest` en `mail/static/src/core/web/messaging_menu_patch.js`) + badge `counter`. | UI/UX | 🟡 Media | Patch `messaging_menu.js`: `MessagingMenu.prototype.canPromptToInstall = false` (punto único: mata card, badge y `hasPreviews`); push `notificationRequest` intacto. + `remove("install_pwa")` en `user_menu.js`. | `<pendiente>` |
+| BUG-009 | Fuga de marca — OdooBot (bienvenida y respuestas) | Bot se presentaba como "Odoo's chat helps employees..." (mail_bot `_init_odoobot`) y onboarding mencionaba `@OdooBot`, "Enjoy exploring Odoo!" y links `odoo.com/documentation` `odoo.com/slides`. | UI/UX | 🟡 Media | Override `_init_odoobot()` con texto neutro ERPICO; override `_get_style_dict()` sin links odoo.com; `_get_answer()` post-procesa `@OdooBot`→`@ERPICO Assistant` y "Enjoy exploring Odoo!"→"Enjoy exploring ERPICO!". | `<pendiente>` |
+| BUG-010 | Fuga de marca — Avatar y nombre del bot | Partner `base.partner_root` con nombre "OdooBot" e imagen `mail/static/src/img/odoobot.png`; icono fallback de notificaciones `odoobot_transparent.png` (`out_of_focus_service.js`). | Datos | ⚪ Baja | `post_init_hook._rebrand_bot_partner` + migración `19.0.1.3.0`: name "ERPICO Assistant", `image_1920` con placeholder `bot_placeholder.png`; patch JS `out_of_focus.js` para icono fallback. | `<pendiente>` |
+
 Resuelto el **2026-09-17** (hot-fix posterior a `19.0.1.1.0`, sin bump de
 versión; verificado con `-u` de los 3 módulos + `--test-enable
 --test-tags=/erpico_debranding` → **11/11 tests, 0 failures, 0 errors**, 66

@@ -17,7 +17,8 @@ docker exec -i odoo_debrand_test odoo -d debrand_test \
   --http-port=8090 --no-http --stop-after-init
 ```
 
-- **Expectativa:** 20/20 PASS.
+- **Expectativa:** 22/22 PASS (20 previos + `TestBotWelcomeNeutral`, desde
+  19.0.1.3.0).
 - **Ojo sintaxis de tags:** usar el tag plano (`erpico_debranding`), NO
   `/erpico_debranding`: la barra añade filtro de módulo y excluye los tests
   de `_sale`/`_pos`.

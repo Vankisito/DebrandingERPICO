@@ -233,3 +233,40 @@ class TestPatchMigrationParity(TransactionCase):
             patch_legacy_emails)
         result = patch_legacy_emails(self.env)
         self.assertEqual(result, [], "Patch was not idempotent")
+
+
+@tagged('erpico_debranding')
+class TestBotWelcomeNeutral(TransactionCase):
+    """Bienvenida del bot sin marca Odoo."""
+
+    def test_init_odoobot_neutral(self):
+        user = self.env['res.users'].create({
+            'name': 'Test Debrand',
+            'login': 'test_debrand_%s' % self.env.cr.now,
+            'email': 'test_debrand@example.com',
+            'group_ids': [(4, self.env.ref('base.group_user').id)],
+        })
+        channel = user._init_odoobot()
+        messages = channel.message_ids
+        self.assertTrue(messages)
+        for msg in messages:
+            self.assertNotIn('Odoo', str(msg.body))
+        self.assertNotIn('odoo.com', str(channel.message_ids[0].body))
+        bot = self.env.ref('base.partner_root')
+        self.assertEqual(bot.name, 'ERPICO Assistant')
+        self.assertTrue(bot.image_1920)
+
+    def test_get_answer_neutralizes(self):
+        bot = self.env['mail.bot']
+        user = self.env['res.users'].create({
+            'name': 'Test Debrand Answer',
+            'login': 'test_debrand_answer_%s' % self.env.cr.now,
+            'email': 'test_answer@example.com',
+            'group_ids': [(4, self.env.ref('base.group_user').id)],
+        })
+        channel = user._init_odoobot()
+        user.sudo().odoobot_state = 'onboarding_command'
+        answer = bot.with_user(user)._get_answer(
+            channel, 'help', {'author_id': user.partner_id.id}, command='help')
+        self.assertIn('@ERPICO Assistant', str(answer))
+        self.assertNotIn('OdooBot', str(answer))

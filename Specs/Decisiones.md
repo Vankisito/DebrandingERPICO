@@ -139,3 +139,78 @@ Estado de cada registro: `[x]` aceptada, `[ ]` propuesta, `[!]` revocada.
 - **Por qué:** compatibilidad con pipelines OCA/`oca-addons-repo-template`,
   Pylint de la comunidad y consumo humano/agentes del `readme/`.
 - **Impacto:** el proyecto es publicable tal cual.
+
+---
+
+## D-10 — Push notifications: se mantienen
+
+- **Estado:** `[x]`
+- **Qué:** el push permiso banner ("Turn on notifications",
+  `notificationRequest` en `messaging_menu_patch.js`) **no** se elimina.
+- **Por qué:** decisión del cliente — solo falta la marca, no la
+  funcionalidad; el permiso de notificaciones es útil en la app.
+- **Impacto:** en el tab Notificaciones sigue la card push cuando
+  `mail.notification.permission === 'prompt'`.
+
+---
+
+## D-11 — Avatar del bot: placeholder genérico, no isotipo
+
+- **Estado:** `[x]`
+- **Qué:** el bot interno (partner `base.partner_root`) pasa a llamarse
+  "ERPICO Assistant" y su imagen es un placeholder genérico
+  (`bot_placeholder.png`: fondo morado `#714B67`, letra "E"), ve
+  cupo del `odoobot.png` de Odoo.
+- **Por qué:** un isotipo de marca para el bot sería un uso incorrecto del
+  isotipo; el placeholder es neutro y no evoca Odoo.
+- **Impacto:** el avatar se ve en chatter, usuarios del chat y notificación
+  del sistema (fallback en `out_of_focus_service`).
+
+---
+
+## D-12 — Conversación del bot: neutra, no mutilada
+
+- **Estado:** `[x]`
+- **Qué:** la conversación del bot se **conserva** íntegra (onboarding de
+  emoji, archivos, comandos, ping, respuestas rápidas). Solo se reemplazan
+  las cadenas que citan la marca: `@OdooBot`→`@ERPICO Assistant`, "Enjoy
+  exploring Odoo!"→"Enjoy exploring ERPICO!" y los links a
+  `odoo.com/documentation` y `odoo.com/slides` (se vacían).
+- **Por qué:** desactivar el bot (estado `disabled`) rompería el flujo de
+  onboarding del core y dejaría el chat muerto; se prefiere un bot funcional
+  con texto neutro.
+- **Alternativas rechazadas:** estado `disabled` (ROM: sin newsletter), bot
+  con texto 100% custom (más superficie de test sin necesidad).
+- **Impacto:** el bot responde igual que el core; solo cambia el texto de
+  marca.
+
+---
+
+## D-13 — Banner "Install Odoo": neutralizar en el punto único del componente
+
+- **Estado:** `[x]`
+- **Qué:** `MessagingMenu.prototype.canPromptToInstall → false` y
+  `user_menuitems.remove('install_pwa')`.
+- **Por qué:** el banner `installationRequest` y el +1 del `counter` se
+  gobiernan por `canPromptToInstall`; un getter único lo neutraliza todo
+  en un solo punto, sin tocar el push ni el resto del menú.
+- **Alternativas rechazadas:** parche de toda la card `installationRequest`
+  (más código, mismo resultado), ocultar vía CSS (frágil y visible en flash).
+- **Impacto:** "Install Odoo" y duplicado "Install App" desaparecen;
+  el navegador solo muestra su prompt nativo si el JS llama `pwa.show()`,
+  lo que ya no sucede.
+
+---
+
+## D-14 — About robusto: componente propio con template único
+
+- **Estado:** `[x]`
+- **Qué:** en vez de confiar en sobrescribir `res_config_edition` por mismo
+  `t-name`, se registra un componente **propio** (`ErpicoResConfigEdition`,
+  template `erpico_res_config_edition`) bajo la misma clave de
+  `view_widgets` → el add del registry gana por orden de carga del bundle.
+- **Por qué:** la sobrescritura por t-name idéntico puede perder según el
+  orden de los assets; registrar el widget (que referencia su propio
+  template con nombre único) es determinista.
+- **Impacto:** la tarjeta About muestra "ERPICO / Powered by ERPICO", sin
+  versión Community ni copyright Odoo.

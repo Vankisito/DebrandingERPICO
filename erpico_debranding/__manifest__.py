@@ -1,6 +1,6 @@
 {
     'name': 'Erpico Debranding',
-    'version': '19.0.1.2.0',
+    'version': '19.0.1.3.0',
     'category': 'Hidden',
     'summary': 'Remove Odoo branding from UI, emails and portal (Odoo 19)',
     'description': """
@@ -23,6 +23,7 @@ el código del seed, y todo es revertible con `-u`.
         'base_setup',
         'portal',
         'mail',
+        'mail_bot',
         'auth_signup',
         'payment',
     ],
@@ -35,7 +36,10 @@ el código del seed, y todo es revertible con `-u`.
     'assets': {
         'web.assets_backend': [
             'erpico_debranding/static/src/js/user_menu.js',
+            'erpico_debranding/static/src/js/messaging_menu.js',
+            'erpico_debranding/static/src/js/out_of_focus.js',
             'erpico_debranding/static/src/scss/debranding.scss',
+            'erpico_debranding/static/src/settings_form_view/res_config_edition.js',
             'erpico_debranding/static/src/settings_form_view/res_config_edition.xml',
         ],
         'web.assets_frontend': [

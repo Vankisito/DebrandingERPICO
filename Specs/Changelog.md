@@ -115,5 +115,31 @@ relevantes. Documento vivo.
 
 ---
 
+## 2026-09-22 — Sesión 6: bot neutro + banner PWA + avatar
+
+**Entorno:** mismo stack Docker; validación pendiente (`-u` + suite).
+
+- **BUG-008 (banner "Install Odoo"):** causa en
+  `mail/static/src/core/web/messaging_menu_patch.js:73-84` (getter
+  `installationRequest`, tab Notificaciones, secuencia frente a
+  `pwa.canPromptToInstall`; suma badge via `counter`). Fix: patch JS
+  `messaging_menu.js` → `canPromptToInstall = false` (punto único),
+  + `remove("install_pwa")` en `user_menu.js` (ítem "Install App" seq 65).
+  Push `notificationRequest` intacto (decisión D-10).
+- **BUG-009 (welcome/onboarding OdooBot):** `mail_bot/models/res_users.py`
+  `_init_odoobot` → override neutro en `models/res_users.py`;
+  `mail_bot/models/mail_bot.py` `_get_style_dict` sin links odoo.com +
+  `_get_answer` post-procesa `@OdooBot`→`@ERPICO Assistant`, "Enjoy
+  exploring Odoo!"→"Enjoy exploring ERPICO!".
+- **BUG-010 (avatar/nombre bot):** data + migración `19.0.1.3.0` +
+  `post_init_hook._rebrand_bot_partner`: name "ERPICO Assistant",
+  `image_1920` = placeholder `bot_placeholder.png` (generado). Icono
+  fallback notificaciones (`out_of_focus_service.js:52` odoobot_transparent)
+  patcheado vía `out_of_focus.js` → placeholder.
+- Versión núcleo → `19.0.1.3.0`; tests nuevos `TestBotWelcomeNeutral`.
+- Siguiente: validar en Docker (`-u`, revisar bundle, issue 3 assets).
+
+---
+
 *Próxima sesión: evaluar `/web/database/list` (JSON-RPC) y hardening de
 deploy (`list_db = False`, proxy, `admin_passwd`).*

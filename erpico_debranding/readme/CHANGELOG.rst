@@ -1,6 +1,22 @@
 Changelog
 =========
 
+19.0.1.3.0 (2026-09-22)
+-----------------------
+* Bot de chat neutro: texto de bienvenida sin marca Odoo
+  (``_init_odoobot``) y respuestas del onboarding que citan al bot
+  reescritas (``@OdooBot`` → ``@ERPICO Assistant``, "Enjoy exploring
+  Odoo!" → "Enjoy exploring ERPICO!"), sin links a ``odoo.com``.
+* Elimina el anuncio "Install Odoo" del tab de Notificaciones y el ítem
+  "Install App" del menú de usuario (``canPromptToInstall=false`` +
+  remoción de ``install_pwa``).
+* Avatar del bot: nombre "ERPICO Assistant" e imagen placeholder
+  genérico (``bot_placeholder.png``) vía ``post_init_hook`` y migración
+  ``19.0.1.3.0``; icono fallback de notificaciones desmarcado.
+* Tarjeta About de Ajustes asegurada con componente propio
+  ``ErpicoResConfigEdition`` registrado sobre ``res_config_edition``
+  (template ``erpico_res_config_edition``).
+
 19.0.1.2.0 (2026-09-18)
 -----------------------
 * Bloquea los endpoints POST de gestión de base de datos (R-001):

@@ -64,6 +64,9 @@ parche en `post_init_hook` + migración versionada.
 | S11 | Rutas de gestión de BD | `Forbidden` en `/web/database/manager` y `/web/database/selector` | núcleo |
 | S12 | Portal ventas/compras | QWeb: ocultar "Connect with your software!" | sale |
 | S13 | Recibo POS | QWeb `order_receipt.xml` (footer ERPICO) | pos |
+| S14 | Bot de chat interno | override `_init_odoobot` + `_get_answer`/`_get_style_dict` + partner/avatar + icono notificación | núcleo |
+| S15 | Banner "Install Odoo" / ítem "Install App" | JS patch `canPromptToInstall=false` + `remove("install_pwa")` | núcleo |
+| S16 | Tarjeta About de Ajustes | componente propio `ErpicoResConfigEdition` (registry) + template único | núcleo |
 
 ---
 
@@ -83,6 +86,10 @@ parche en `post_init_hook` + migración versionada.
    `env.cr.commit()`.
 8. Validación de QWeb: render real (`ir.ui.view._render`) o HTTP — nunca
    `_get_combined_arch` (no refleja overrides en templates planos).
+9. Overrides OWL por `t-name` idéntico no son deterministas: para widget
+   críticos, registrar un componente propio en el registry (D-14).
+10. El bot se conserva funcional (D-12): solo se reemplazan las cadenas de
+    marca; el push `notificationRequest` no se toca (D-10).
 
 ---
 
@@ -109,6 +116,13 @@ SUPERFICIES
 [x] Bundle web.assets_web.min.js incluye user_menu.js + res_config_edition
 [x] Bundle point_of_sale.assets_prod incluye order_receipt.xml
 [x] Login HTTP: 5783 bytes, ERPICO, sin odoo.com visible
+
+DESDE 19.0.1.3.0 (bot/banner/about — pendiente de validar con Docker)
+[ ] Bot: bienvenida sin "Odoo"; `@ERPICO Assistant`; avatar placeholder
+[ ] Notificaciones: sin "Install Odoo"; push "Turn on notifications" presente
+[ ] Menú de usuario: sin "Install App"/"Support"/"Odoo Account"
+[ ] Ajustes → About: "Powered by ERPICO", sin versión/copyright Odoo
+[ ] Suite --test-tags=erpico_debranding → 22/22
 ```
 
 ---

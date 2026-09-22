@@ -43,9 +43,14 @@ odoo -d debrand_test -u erpico_debranding,erpico_debranding_sale,erpico_debrandi
 | `TestPosReceiptDebranding` (pos) | `test_override_registered_in_assets` | S13 | `order_receipt.xml` en `point_of_sale.assets_prod` (`_get_asset_paths`) | ✅ |
 | `TestPosReceiptDebranding` (pos) | `test_override_targets_order_receipt` | S13 | t-inherit `OrderReceipt` + footer ERPICO, sin "Powered by Odoo" | ✅ |
 
+| `TestBotWelcomeNeutral` | `test_init_odoobot_neutral` | S-bot (2026-09-22) | bienvenida `_init_odoobot` sin "Odoo"/odoo.com; partner = ERPICO Assistant con imagen | ⏳ |
+| `TestBotWelcomeNeutral` | `test_get_answer_neutralizes` | S-bot (2026-09-22) | `_get_answer('help')` → `@ERPICO Assistant`, sin `OdooBot` | ⏳ |
+
 > Desde `58367ba` (BUG-006): la cobertura de S3/S4 incluye `.search()` plano.
 > Desde `19.0.1.2.0`: cobertura R-001 (POST), paridad parche/migración,
 > domains legacy, S12 y S13 automatizados.
+> Desde `19.0.1.3.0`: `TestBotWelcomeNeutral` (bot neutro y respuestas)
+> pendiente de correr en la validación con Docker.
 
 ## 2. QA manual / HTTP (sesión final reportada)
 
@@ -65,7 +70,7 @@ odoo -d debrand_test -u erpico_debranding,erpico_debranding_sale,erpico_debrandi
 
 ## 3. Resultado global
 
-- **Automatizados:** 20/20 ✅ (`--test-tags=erpico_debranding`, 2026-09-18)
+- **Automatizados:** 20/20 ✅ (`--test-tags=erpico_debranding`, 2026-09-18) + 2 nuevos pendientes de validación con Docker
 - **QA manual/HTTP:** 11/11 ✅ (2026-09-17 + POST real 2026-09-18)
 - **Riesgo residual:** `/web/database/list` JSON-RPC activo (compat móvil) →
   mitigable en deploy con `list_db = False` + proxy.
