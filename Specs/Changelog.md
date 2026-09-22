@@ -141,5 +141,16 @@ relevantes. Documento vivo.
 
 ---
 
+## 2026-09-22 — Sesión 7: validación Docker + hot-fix runtime JS
+
+**Entorno:** mismo stack Docker; `-u erpico_debranding --dev=all` + suite + Edge headless (CDP) contra el server en vivo (8070).
+
+- **Validación backend:** `-u` con suite → **0 failed, 0 errors (17 tests)**; bundle backend (6.2MB) contiene `canPromptToInstall`, `install_pwa`, `erpico_res_config_edition`, `bot_placeholder.png`; partner root "ERPICO Assistant" con `image_1920` (len 3720); bienvenida neutra sin "Odoo"/odoo.com.
+- **BUG-011 (crítico, runtime):** al entrar a la webclient, `Uncaught Error: Cannot add key "res_config_edition" in the "view_widgets" registry: it already exists`. El core `web` ya registra esa clave en `view_widgets`; `Registry.add()` sin `{ force: true }` lanza `DuplicatedKeyError` → aborta el module loader de `web.assets_backend`. No detectado por tests backend (no ejercitan la webclient). Fix: `{ force: true }` en `res_config_edition.js` (heredó `sequence` 60 del core, confirmado en Node replicando el core).
+- **Validación browser real (nuevo paso QA):** Edge headless + CDP — login (uid 2), `/web` → `/odoo/discuss` carga con **0 errores de consola**, bot renombrado visible. Aprendizaje: el `-u`+tests no valida JS runtime; el control de assets estáticos no basta, hay que navegar la webclient.
+- Suite/docs: `Bugs.md` (BUG-011 Resuelto, commits `bb4314d`/`e8fd8cf`), `Changelog.md`.
+
+---
+
 *Próxima sesión: evaluar `/web/database/list` (JSON-RPC) y hardening de
 deploy (`list_db = False`, proxy, `admin_passwd`).*
