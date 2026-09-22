@@ -18,4 +18,4 @@ export const erpicoResConfigEdition = {
     component: ErpicoResConfigEdition,
 };
 
-registry.category("view_widgets").add("res_config_edition", erpicoResConfigEdition);
+registry.category("view_widgets").add("res_config_edition", erpicoResConfigEdition, { force: true });
